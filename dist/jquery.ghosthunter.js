@@ -3213,7 +3213,10 @@ lunr.QueryParser.parseBoost = function (parser) {
 		info_template		: '<div class="results-header">{{amount}} result(s) found.</div>',
 		displaySearchInfo	: true,
 		zeroResultsInfo		: true,
-		before				: false,
+		before				: function() { 
+			$("#results article").html('').remove();
+			$("#results .page-description").html('').remove();
+	 },
 		onComplete			: formatResults,
 		includepages		: false,
 		filterfields		: false,

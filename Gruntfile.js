@@ -29,11 +29,19 @@ module.exports = function(grunt) {
                     }
                 }
             }
-        }
+        },
+		terser: {
+			dist: {				
+				files: {
+					'dist/jquery.ghosthunter.min.js': ['dist/jquery.ghosthunter.js']
+				}
+			}
+		}
     });
     
     grunt.loadNpmTasks('grunt-contrib-copy');
+	grunt.loadNpmTasks('grunt-terser');
     
     // Default task(s).
-    grunt.registerTask('default', ['copy']);
+    grunt.registerTask('default', ['copy', 'terser']);
 };
