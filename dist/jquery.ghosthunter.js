@@ -6,6 +6,7 @@
 */
 (function( $ ) {
 
+	var ghosthunter_key = "2c61c809a636d112d78e70ca73";
 	/**
  * lunr - http://lunrjs.com - A bit like Solr, but much smaller and not as bright - 2.1.5
  * Copyright (C) 2017 Oliver Nightingale
@@ -3279,6 +3280,7 @@ lunr.QueryParser.parseBoost = function (parser) {
 		// console.log('ghostHunter: grabAndIndex');
 		this.blogData = {};
 		this.latestPost = 0;
+		var url = "/ghost/api/v2/content/posts/?key=" + ghosthunter_key + "&limit=all&include=tags";
 		var params = {
 			limit: "all",
 			include: "tags,authors"
@@ -3292,7 +3294,7 @@ lunr.QueryParser.parseBoost = function (parser) {
 			params.filter="(page:true,page:false)";
 		}
 		var me = this;
-		$.get(ghost.url.api('posts',params)).done(function(data){
+		$.get(url).done(function(data){
 			var idxSrc = data.posts;
 			// console.log("ghostHunter: indexing all posts")
 			me.index = lunr(function () {
@@ -3464,8 +3466,14 @@ lunr.QueryParser.parseBoost = function (parser) {
 					filter: "updated_at:>\'" + this.latestPost.replace(/\..*/, "").replace(/T/, " ") + "\'",
 					fields: "id"
 				};
+
+				var url = "/ghost/api/v2/content/posts/?key=" +
+								ghosthunter_key + "&limit=all&fields=id" + "&filter" +
+								"updated_at:>\'" + this.latestPost.replace(/\..*/, "").replace(/T/, " ") + "\'";
+				
+
 				var me = this;
-				$.get(ghost.url.api('posts', params)).done(function(data){
+				$.get(url).done(function(data){
 					if (data.posts.length > 0) {
 						grabAndIndex.call(me);
 					} else {
